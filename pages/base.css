@@ -1,0 +1,23 @@
+html {
+  box-sizing: border-box;
+}
+html * {
+  box-sizing: inherit;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: darkslategray;
+  color: whitesmoke;
+  font-family: 'Helvetica Neue', 'system-ui', sans-serif;
+  font-weight: 300;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
