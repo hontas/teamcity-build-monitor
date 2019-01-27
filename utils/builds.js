@@ -1,29 +1,21 @@
 import { getLastBuild } from './api';
 
-const buildsConfig = {
-  QoreRoot_QliroCom_Build: {
-    name: 'Qliro.com develop BUILD'
-  },
-  QoreRoot_QliroCom_E2eTest: {
-    name: 'Qliro.com develop E2E'
-  }
-};
+const buildsToDisplay = ['QoreRoot_QliroCom_Build', 'QoreRoot_QliroCom_E2eTest'];
 
 export const getBuilds = () => {
-  const promises = Object.entries(buildsConfig).map(([type, options]) =>
+  const promises = buildsToDisplay.map((type) =>
     getLastBuild(type).then((json) => {
       if (!json) return undefined;
       return {
-        [type]: {
-          ...options,
-          ...json
-        }
+        [type]: json
       };
     })
   );
 
   return Promise.all(promises).then((responses) => {
-    const nextBuilds = responses.filter(Boolean).reduce((res, curr) => ({ ...res, ...curr }), {});
+    const successfulResponses = responses.filter(Boolean);
+    if (successfulResponses.length === 0) return;
+    const nextBuilds = successfulResponses.reduce((res, curr) => ({ ...res, ...curr }), {});
     console.log(nextBuilds);
     return nextBuilds;
   });

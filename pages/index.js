@@ -3,41 +3,52 @@ import classNames from 'classnames';
 
 import Build from '../components/Build';
 import { getBuilds } from '../utils/builds';
+import { toRelative } from '../utils/relativeTime';
+import * as localStorage from '../utils/localStorage';
 import './base.css';
 import css from './index.css';
 
-const localStorageKey = 'dashboard.builds';
-
 export default () => {
   const [builds, setBuilds] = useState(null);
+  const [lastUpdate, setLastUpdate] = useState();
 
   useEffect(() => {
     let timeoutId;
-    let cancelUpdate;
+    let didUnmount = false;
     const getSetBuilds = () =>
       getBuilds().then((nextBuilds) => {
-        if (cancelUpdate) return;
-        setBuilds(nextBuilds);
-        window.localStorage.setItem(localStorageKey, JSON.stringify(nextBuilds));
+        if (didUnmount) return;
+        if (nextBuilds) {
+          const updated = Date.now();
+          setBuilds(nextBuilds);
+          setLastUpdate(updated);
+          localStorage.setItem({
+            builds: nextBuilds,
+            lastUpdate: updated
+          });
+        }
         timeoutId = setTimeout(getSetBuilds, 5000);
       });
 
-    try {
-      setBuilds(JSON.parse(window.localStorage.getItem(localStorageKey)));
-    } catch (e) {
-      console.warn(e);
+    const state = localStorage.getItem();
+    if (state) {
+      if (state.builds) setBuilds(state.builds);
+      if (state.lastUpdate) setLastUpdate(state.lastUpdate);
     }
+
     getSetBuilds();
+
     return () => {
-      cancelUpdate = true;
+      didUnmount = true;
       clearTimeout(timeoutId);
     };
   }, []);
 
   return (
     <div className={css.container}>
-      <header>
+      <header className={css.header}>
         <h1 className={css.heading}>Websteros dashboard</h1>
+        {lastUpdate && <p className={css.updatedAt}>updated {toRelative(lastUpdate)}</p>}
       </header>
       <div className={css.buildsContainer}>
         {builds && Object.entries(builds).map(([type, props]) => <Build key={type} {...props} />)}

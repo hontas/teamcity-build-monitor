@@ -3,9 +3,18 @@
   padding: 0.5em;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .heading {
   color: rgba(0, 0, 0, 0.3);
   margin: 0;
+}
+.updatedAt {
+  font-size: 0.75em;
 }
 
 .buildsContainer {

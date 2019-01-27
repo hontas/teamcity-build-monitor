@@ -26,5 +26,5 @@ TEAMCITY_AUTH=Basic XXXXXXXXX
 - [x] Get basic auth from ENV
 - [ ] Enable teamcity auth in UI
 - [ ] Enable config of builds in UI
-- [ ] Dont persist malformed data to local storage
+- [x] Dont persist malformed data to local storage
 - [ ] Only fetch details for running builds

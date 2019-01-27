@@ -22,10 +22,7 @@ function getBuildInfo(query = {}) {
         ...transformDates(buildDetails)
       };
     })
-    .catch((error) => {
-      console.error(error);
-      return undefined;
-    });
+    .catch(() => undefined);
 }
 
 function makeRequest(url) {
@@ -33,7 +30,7 @@ function makeRequest(url) {
     headers: { accept: 'application/json' }
   }).then((resp) => {
     if (resp.ok) return resp.json();
-    console.error('resp', resp);
+    // console.error(resp);
     return Promise.reject(resp.text());
   });
 }
