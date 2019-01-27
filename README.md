@@ -13,6 +13,13 @@ npm i
 npm build && npm start
 ```
 
+Example `.env`-file
+
+```
+TEAMCITY_URL=https://your.teamcity.instance.com
+TEAMCITY_AUTH=Basic XXXXXXXXX
+```
+
 ## TODO
 
 - [x] Get Teamcity baseUrl from ENV
