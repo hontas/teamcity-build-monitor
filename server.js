@@ -24,7 +24,9 @@ app.prepare().then(() => {
       },
       logLevel: 'debug',
       onProxyReq(proxyReq) {
-        proxyReq.setHeader('Authorization', TEAMCITY_AUTH);
+        if (TEAMCITY_AUTH) {
+          proxyReq.setHeader('Authorization', TEAMCITY_AUTH);
+        }
       }
     })
   );
