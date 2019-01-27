@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const next = require('next');
 const proxy = require('http-proxy-middleware');
@@ -7,20 +8,23 @@ const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
+const TEAMCITY_URL = process.env.TEAMCITY_URL;
+const TEAMCITY_AUTH = process.env.TEAMCITY_AUTH;
+
 app.prepare().then(() => {
   const server = express();
 
   server.use(
     '/api/teamcity',
     proxy({
-      target: 'http://teamcity.qliro.local',
+      target: TEAMCITY_URL,
       changeOrigin: true,
       pathRewrite: {
         '^/api/teamcity': ''
       },
       logLevel: 'debug',
       onProxyReq(proxyReq) {
-        proxyReq.setHeader('Authorization', 'Basic cG9udHVzbHU6U2Y4MzVwdWI0M3N1cmY3YWdl');
+        proxyReq.setHeader('Authorization', TEAMCITY_AUTH);
       }
     })
   );
