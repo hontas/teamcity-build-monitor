@@ -11,7 +11,7 @@ export function toRelative(date) {
   let diff = (Date.now() - new Date(date)) / 1000; // get diff in seconds
   if (diff < oneMinute) return rtf.format(Math.round(-diff), 'second');
   if (diff < oneHour) return rtf.format(Math.round(-diff / oneMinute), 'minute');
-  if (diff < oneDay) return rtf.format(Math.round(-diff / oneHour), 'minute');
+  if (diff < oneDay) return rtf.format(Math.round(-diff / oneHour), 'hour');
   return rtf.format(Math.round(-diff / oneDay), 'day');
 }
 
