@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:3000/api/teamcity';
+const baseUrl = '/api/teamcity';
 
 export const toQueryString = (query = {}) =>
   Object.entries(query)
