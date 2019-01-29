@@ -1,9 +1,26 @@
-const baseUrl = '/api/teamcity';
+import { toQueryString, makeRequest } from './index';
 
-export const toQueryString = (query = {}) =>
-  Object.entries(query)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&');
+const baseUrl = '/api/teamcity';
+const buildsToDisplay = ['QoreRoot_QliroCom_Build', 'QoreRoot_QliroCom_E2eTest'];
+
+export const getBuilds = () => {
+  const promises = buildsToDisplay.map((type) =>
+    getLastBuild(type).then((json) => {
+      if (!json) return undefined;
+      return {
+        [type]: json
+      };
+    })
+  );
+
+  return Promise.all(promises).then((responses) => {
+    const successfulResponses = responses.filter(Boolean);
+    if (successfulResponses.length === 0) return;
+    const nextBuilds = successfulResponses.reduce((res, curr) => ({ ...res, ...curr }), {});
+    console.log(nextBuilds);
+    return nextBuilds;
+  });
+};
 
 export const getLastBuild = (buildType) =>
   getBuildInfo({
@@ -23,16 +40,6 @@ function getBuildInfo(query = {}) {
       };
     })
     .catch(() => undefined);
-}
-
-function makeRequest(url) {
-  return fetch(url, {
-    headers: { accept: 'application/json' }
-  }).then((resp) => {
-    if (resp.ok) return resp.json();
-    // console.error(resp);
-    return Promise.reject(resp.text());
-  });
 }
 
 function transformDates(buildDetails) {

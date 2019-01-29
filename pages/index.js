@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import classNames from 'classnames';
 
 import Build from '../components/Build';
-import { getBuilds } from '../utils/builds';
+import { getBuilds } from '../api/teamcity';
 import { toRelative } from '../utils/relativeTime';
 import * as localStorage from '../utils/localStorage';
 import './base.css';
