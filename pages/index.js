@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
 import { getBuilds } from '../api/teamcity';
-import { toRelative } from '../utils/relativeTime';
-
 import useSelectedBuilds from '../state/selectedBuilds';
 import useLastUpdated from '../state/lastUpdated';
 import useBuildInfo from '../state/buildInfo';
 
 import Header from '../components/Header';
 import Builds from '../components/Builds';
-import SelectBuildTypesForm from '../components/SelectBuildTypesForm';
+import BuildsToMonitorForm from '../components/BuildsToMonitorForm';
 
 import './base.css';
 import css from './index.css';
@@ -63,14 +61,14 @@ export default () => {
   return (
     <div className={css.container}>
       <Header className={css.header} isLoading={isLoading} lastUpdate={lastUpdate} />
-      <SelectBuildTypesForm
-        selectedBuildTypes={buildsToMonitor}
-        toggleBuildType={toggleBuildToMonitor}
-      />
       <Builds
         className={css.buildsContainer}
         buildsInfo={buildsInfo}
         buildsToMonitor={buildsToMonitor}
+      />
+      <BuildsToMonitorForm
+        selectedBuildTypes={buildsToMonitor}
+        toggleBuildType={toggleBuildToMonitor}
       />
     </div>
   );

@@ -4,10 +4,15 @@
   justify-content: space-between;
 }
 
+.spinner {
+  color: rgba(255, 255, 255, 0.5);
+}
+
 .heading {
   color: rgba(0, 0, 0, 0.3);
   margin: 0;
 }
+
 .updatedAt {
   font-size: 0.75em;
 }

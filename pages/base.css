@@ -6,7 +6,8 @@ html * {
 }
 
 html,
-body {
+body,
+body > div {
   height: 100%;
 }
 

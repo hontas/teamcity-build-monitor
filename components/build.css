@@ -1,13 +1,19 @@
 .build {
   background: rgba(0, 0, 0, 0.3);
   color: inherit;
-  flex-grow: 1;
-  flex-basis: calc(100% - 1em);
+  flex-basis: 100%;
   margin: 0.5em;
   padding: 0.5em;
   position: relative;
   overflow: hidden;
   text-decoration: none;
+  height: 100px;
+}
+
+@media screen and (min-width: 768px) {
+  .build {
+    flex-basis: calc(50% - 1em);
+  }
 }
 
 .buildTextContent {
