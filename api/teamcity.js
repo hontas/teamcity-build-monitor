@@ -1,57 +1,22 @@
-import { toQueryString, makeRequest } from './index';
+import { getBuildTypes } from './buildTypes';
+import { getProjects } from './projects';
 
-const baseUrl = '/api/teamcity';
-const buildsToDisplay = ['QoreRoot_QliroCom_Build', 'QoreRoot_QliroCom_E2eTest'];
+const idSelector = ({ id }) => id;
 
-export const getBuilds = () => {
-  const promises = buildsToDisplay.map((type) =>
-    getLastBuild(type).then((json) => {
-      if (!json) return undefined;
-      return {
-        [type]: json
-      };
-    })
-  );
+export { getBuilds } from './builds';
 
-  return Promise.all(promises).then((responses) => {
-    const successfulResponses = responses.filter(Boolean);
-    if (successfulResponses.length === 0) return;
-    const nextBuilds = successfulResponses.reduce((res, curr) => ({ ...res, ...curr }), {});
-    console.log(nextBuilds);
-    return nextBuilds;
+export const getProjectsAndBuildTypes = () => {
+  return Promise.all([getProjects(), getBuildTypes()]).then(([allProjects, buildTypes]) => {
+    const roots = allProjects.filter(({ parentProjectId }) => parentProjectId === '_Root');
+    const levelOneIds = roots.map(idSelector);
+    const projects = allProjects.filter(({ parentProjectId }) =>
+      levelOneIds.includes(parentProjectId)
+    );
+
+    return {
+      roots,
+      projects,
+      buildTypes
+    };
   });
 };
-
-export const getLastBuild = (buildType) =>
-  getBuildInfo({
-    buildType,
-    locator: 'running:any',
-    count: 1
-  });
-
-function getBuildInfo(query = {}) {
-  return makeRequest(`${baseUrl}/app/rest/builds?${toQueryString(query)}`)
-    .then(({ build }) => build[0])
-    .then(async (build) => {
-      const buildDetails = await makeRequest(`${baseUrl}${build.href}`);
-      return {
-        ...build,
-        ...transformDates(buildDetails)
-      };
-    })
-    .catch(() => undefined);
-}
-
-function transformDates(buildDetails) {
-  return {
-    ...buildDetails,
-    queuedDate: transformDate(buildDetails.queuedDate),
-    startDate: transformDate(buildDetails.startDate),
-    finishDate: transformDate(buildDetails.finishDate)
-  };
-}
-
-function transformDate(simpleDate) {
-  if (!simpleDate) return simpleDate;
-  return simpleDate.replace(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})/, '$1-$2-$3T$4:$5:$6');
-}

@@ -1,3 +1,5 @@
+export const teamcityBaseUrl = '/api/teamcity';
+
 export const toQueryString = (query = {}) =>
   Object.entries(query)
     .map(([key, value]) => `${key}=${value}`)
