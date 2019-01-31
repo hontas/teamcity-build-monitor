@@ -22,6 +22,7 @@ export default ({ selectedBuildTypes = [], toggleBuildType }) => {
 
   return (
     <div className={css.wrapper}>
+      <h3>Select builds to monitor</h3>
       <form>
         <select onChange={({ target }) => selectRootId(target.value)}>
           <option disabled>Team</option>
